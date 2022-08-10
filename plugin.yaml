@@ -15,17 +15,35 @@ technologies: # Ref: https://docs.stackspot.com/latest/docs/creators-guide/yaml/
 types:
   - env
 inputs:
-  - label: Input Example
+  - label: Nome do WorkGroup
     type: text
-    name: example
-    default: any text
-  - label: Example of number
+    name: workgroup_name
+
+  - label: Limite de gigas para escanear em uma consulta (em Gigabytes)
     type: int
-    name: any_number
-    default: "10"
+    name: gigas_scanned
+    default: "150"
+
+  - label: Nome do bucket de saída dos dados
+    type: text
+    name: bucket_name
+
   - label: Example of list
-    type: multiselect
-    name: any_list
+    type: text
+    name: encryption_option
     items:
-      - item1
-      - item2
+      - SSE_KMS
+      - CSE_KMS
+      - SSE_S3
+    default: "SS3_S3"
+
+  - label: Arn da chave KMS
+    type: text
+    name: kms_key_arn
+    condition:
+      variable: encryption_option
+      operator: "!="
+      value: SSE_S3
+
+global-computed-inputs:
+  bytes_scanned: "{{inputs.gigas_scanned * 1073741824}}"
